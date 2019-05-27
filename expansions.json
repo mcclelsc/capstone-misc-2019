@@ -1,0 +1,1 @@
+{"expansions":[{"input_terms":["direction"],"expanded_terms":["direction","northward","southward","eastward","westward"]},{"input_terms":["speed"],"expanded_terms":["miles per hour","kilometers per hour","mph","kph"]},{"input_terms":["travel"],"expanded_terms":["proceeding"]}]}

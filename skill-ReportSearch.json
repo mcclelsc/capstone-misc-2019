@@ -1,0 +1,527 @@
+{
+  "name": "ReportSearch",
+  "intents": [
+    {
+      "intent": "Hello",
+      "examples": [
+        {
+          "text": "Welcome"
+        },
+        {
+          "text": "Hi"
+        },
+        {
+          "text": "Hello"
+        },
+        {
+          "text": "Hey there"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "DiscoveryCycle",
+      "examples": [
+        {
+          "text": "discoveryCycle"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "FindReport",
+      "examples": [
+        {
+          "text": "I would like to search for a report"
+        },
+        {
+          "text": "I do not have the filename for the report"
+        },
+        {
+          "text": "No, could you help me find a report?"
+        }
+      ],
+      "description": "Recognizes when user wants to search for a report"
+    },
+    {
+      "intent": "CannotFindReport",
+      "examples": [
+        {
+          "text": "reportNotFound"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "InitiateConversation",
+      "examples": [
+        {
+          "text": "initiateConversation"
+        }
+      ],
+      "description": "Intent fires on session creation. Remote sessions have to receive a message. This gives a response to start user conversation."
+    },
+    {
+      "intent": "AlreadyHaveDocumentId",
+      "examples": [
+        {
+          "text": "alreadyHaveDocumentId"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "DiscoveryQuery",
+      "examples": [
+        {
+          "text": "Speed of train"
+        },
+        {
+          "text": "Rail Subdivision"
+        },
+        {
+          "text": "Find report on April 3rd 2013"
+        },
+        {
+          "text": "Direction of train travel"
+        },
+        {
+          "text": "Rail subdivision mile"
+        },
+        {
+          "text": "Were dangerous goods involved"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "RecognizeReport",
+      "examples": [
+        {
+          "text": "Report 888651.pdf",
+          "mentions": [
+            {
+              "entity": "filename",
+              "location": [
+                7,
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "text": "filename.pdf",
+          "mentions": [
+            {
+              "entity": "filename",
+              "location": [
+                0,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Yes, report r13t0060.pdf",
+          "mentions": [
+            {
+              "entity": "filename",
+              "location": [
+                12,
+                24
+              ]
+            }
+          ]
+        },
+        {
+          "text": "The report with the filename filename.pdf",
+          "mentions": [
+            {
+              "entity": "filename",
+              "location": [
+                29,
+                41
+              ]
+            }
+          ]
+        }
+      ],
+      "description": "Intent to gather filename of specific report"
+    },
+    {
+      "intent": "ReportFound",
+      "examples": [
+        {
+          "text": "reportFound"
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "entities": [
+    {
+      "entity": "filename",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "filename.pdf",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "888651.pdf",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "r13t0060.pdf",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    }
+  ],
+  "language": "en",
+  "metadata": {
+    "api_version": {
+      "major_version": "v1",
+      "minor_version": "2018-09-20"
+    }
+  },
+  "description": "",
+  "dialog_nodes": [
+    {
+      "type": "standard",
+      "title": "GeneralDiscoveryQuery",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "generalDiscoveryQuery"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_11_1558848879245",
+      "metadata": {},
+      "conditions": "#DiscoveryQuery",
+      "dialog_node": "node_12_1558848879246"
+    },
+    {
+      "type": "standard",
+      "title": "GeneralDiscoveryQuery",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "generalDiscoveryQuery"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1558839122145",
+      "metadata": {},
+      "conditions": "#DiscoveryQuery",
+      "dialog_node": "node_3_1558845374153"
+    },
+    {
+      "type": "standard",
+      "title": "UnableToFindReport",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Sorry, I was unable to find a report with that filename. Please enter the filename again, or ask if you need help finding a report"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1558839086098",
+      "metadata": {},
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "user_input",
+        "dialog_node": "node_1_1558839086098"
+      },
+      "conditions": "#CannotFindReport",
+      "dialog_node": "node_5_1558846039732",
+      "previous_sibling": "node_4_1558846014060"
+    },
+    {
+      "type": "standard",
+      "title": "ReportFound",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I have found your report. What are you looking for in report $filename?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1558839086098",
+      "metadata": {},
+      "conditions": "#ReportFound",
+      "dialog_node": "node_4_1558846014060"
+    },
+    {
+      "type": "standard",
+      "title": "SearchForReport - Duplicate",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I can help with that. Please provide a statement, question or key phrase so I can search for potential reports."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1556589064338",
+      "metadata": {},
+      "conditions": "#FindReport",
+      "dialog_node": "node_11_1558848879245",
+      "previous_sibling": "node_8_1558847163260"
+    },
+    {
+      "type": "standard",
+      "title": "QueryDiscovery",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "specificDiscoveryQuery"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1556589064338",
+      "metadata": {},
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "user_input",
+        "dialog_node": "node_1_1556589064338"
+      },
+      "conditions": "#DiscoveryQuery",
+      "dialog_node": "node_8_1558847163260"
+    },
+    {
+      "type": "standard",
+      "title": "SpecificDiscoveryQuery",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "specificDiscoveryQuery"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1558846014060",
+      "metadata": {},
+      "conditions": "#DiscoveryQuery",
+      "dialog_node": "node_7_1558846831139"
+    },
+    {
+      "type": "standard",
+      "title": "SearchForReport",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I can help with that. Please provide a statement, question or key phrase so I can search for potential reports."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1558837073043",
+      "metadata": {},
+      "conditions": "#FindReport",
+      "dialog_node": "node_2_1558839122145",
+      "previous_sibling": "node_1_1558839086098"
+    },
+    {
+      "type": "standard",
+      "title": "SpecificReport",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Give me a moment to find that report."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1558837073043",
+      "context": {
+        "filename": "@filename"
+      },
+      "metadata": {},
+      "conditions": "#RecognizeReport",
+      "dialog_node": "node_1_1558839086098"
+    },
+    {
+      "type": "standard",
+      "title": "InitiateConversation",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hello, do you know the filename of the report you wish to discuss?"
+              },
+              {
+                "text": "Welcome. Are you searching for a report with a specific filename or need assistance with a general query?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "conditions": "#InitiateConversation",
+      "dialog_node": "node_3_1558837073043",
+      "previous_sibling": "Welcome"
+    },
+    {
+      "type": "standard",
+      "title": "Anything else",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I didn't understand. Can you try rephrasing."
+              },
+              {
+                "text": "Can you reword your statement? I'm not understanding."
+              },
+              {
+                "text": "I didn't get your meaning."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "conditions": "anything_else",
+      "dialog_node": "Anything else",
+      "previous_sibling": "node_1_1558959550846"
+    },
+    {
+      "type": "standard",
+      "title": "AlreadyKnowDocumentId",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "How may I help you with the chosen report?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "user_input",
+        "dialog_node": "node_7_1558846831139"
+      },
+      "conditions": "#AlreadyHaveDocumentId",
+      "dialog_node": "node_1_1558959550846",
+      "previous_sibling": "node_1_1556589064338"
+    },
+    {
+      "type": "standard",
+      "title": "DiscoveryCycle",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Can I help with anything else?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "conditions": "#DiscoveryCycle",
+      "dialog_node": "node_1_1556589064338",
+      "previous_sibling": "node_3_1558837073043"
+    },
+    {
+      "type": "standard",
+      "title": "Welcome",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hello. How can I help you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "conditions": "#Hello",
+      "digress_in": "does_not_return",
+      "dialog_node": "Welcome"
+    }
+  ],
+  "workspace_id": "fe2f8e94-b2d3-4a68-bc19-227a9a3299f2",
+  "counterexamples": [],
+  "system_settings": {
+    "tooling": {
+      "store_generic_responses": true
+    }
+  },
+  "learning_opt_out": false,
+  "status": "Available"
+}
