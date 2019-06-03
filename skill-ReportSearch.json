@@ -80,16 +80,16 @@
           "text": "Rail Subdivision"
         },
         {
-          "text": "Find report on April 3rd 2013"
-        },
-        {
-          "text": "Direction of train travel"
+          "text": "Were dangerous goods involved"
         },
         {
           "text": "Rail subdivision mile"
         },
         {
-          "text": "Were dangerous goods involved"
+          "text": "Find report on April 3rd 2013"
+        },
+        {
+          "text": "Direction of train travel"
         }
       ],
       "description": ""
@@ -156,6 +156,30 @@
         }
       ],
       "description": ""
+    },
+    {
+      "intent": "ConversationComplete",
+      "examples": [
+        {
+          "text": "Bye"
+        },
+        {
+          "text": "Quit"
+        },
+        {
+          "text": "Exit"
+        },
+        {
+          "text": "Thank you for your help, return me to the homepage."
+        },
+        {
+          "text": "I am done with this conversation."
+        },
+        {
+          "text": "Send me back to the homepage please."
+        }
+      ],
+      "description": ""
     }
   ],
   "entities": [
@@ -206,31 +230,26 @@
           }
         ]
       },
-      "parent": "node_11_1558848879245",
-      "metadata": {},
-      "conditions": "#DiscoveryQuery",
-      "dialog_node": "node_12_1558848879246"
-    },
-    {
-      "type": "standard",
-      "title": "GeneralDiscoveryQuery",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "generalDiscoveryQuery"
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
-      },
       "parent": "node_2_1558839122145",
       "metadata": {},
-      "conditions": "#DiscoveryQuery",
+      "conditions": "anything_else || #DiscoveryQuery",
       "dialog_node": "node_3_1558845374153"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_1_1559582057852",
+      "event_name": "focus",
+      "dialog_node": "handler_3_1559582057852",
+      "previous_sibling": "handler_2_1559582057852"
+    },
+    {
+      "type": "event_handler",
+      "parent": "slot_1_1559582057852",
+      "context": {},
+      "conditions": "$checkIfQuery",
+      "event_name": "input",
+      "dialog_node": "handler_2_1559582057852"
     },
     {
       "type": "standard",
@@ -282,7 +301,62 @@
     },
     {
       "type": "standard",
-      "title": "SearchForReport - Duplicate",
+      "title": "UnableToFindReport",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Sorry, I was unable to find a report with that filename. Please enter the filename again, or ask if you need help finding a report"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1559224021050",
+      "metadata": {},
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "user_input",
+        "dialog_node": "node_1_1559224021050"
+      },
+      "conditions": "#CannotFindReport",
+      "dialog_node": "node_4_1559224021051",
+      "previous_sibling": "node_2_1559224021051"
+    },
+    {
+      "type": "standard",
+      "title": "ReportFound",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I have found your report. What are you looking for in report $filename?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1559224021050",
+      "metadata": {},
+      "conditions": "#ReportFound",
+      "dialog_node": "node_2_1559224021051"
+    },
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "node_7_1558846831139",
+      "metadata": {},
+      "dialog_node": "slot_1_1559582057852"
+    },
+    {
+      "type": "standard",
+      "title": "NewSearchForReport",
       "output": {
         "generic": [
           {
@@ -299,8 +373,8 @@
       "parent": "node_1_1556589064338",
       "metadata": {},
       "conditions": "#FindReport",
-      "dialog_node": "node_11_1558848879245",
-      "previous_sibling": "node_8_1558847163260"
+      "dialog_node": "node_5_1559224048099",
+      "previous_sibling": "node_1_1559224021050"
     },
     {
       "type": "standard",
@@ -325,8 +399,33 @@
         "selector": "user_input",
         "dialog_node": "node_1_1556589064338"
       },
-      "conditions": "#DiscoveryQuery",
-      "dialog_node": "node_8_1558847163260"
+      "conditions": "anything_else || #DiscoveryQuery",
+      "dialog_node": "node_8_1558847163260",
+      "previous_sibling": "node_5_1559224048099"
+    },
+    {
+      "type": "standard",
+      "title": "NewSpecificReport",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Give me a moment to find that report."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1556589064338",
+      "context": {
+        "filename": "@filename"
+      },
+      "metadata": {},
+      "conditions": "#RecognizeReport",
+      "dialog_node": "node_1_1559224021050"
     },
     {
       "type": "standard",
@@ -345,9 +444,63 @@
         ]
       },
       "parent": "node_4_1558846014060",
+      "metadata": {
+        "fallback": "leave"
+      },
+      "conditions": "anything_else || #DiscoveryQuery",
+      "dialog_node": "node_7_1558846831139",
+      "digress_out": "allow_all"
+    },
+    {
+      "type": "standard",
+      "title": "GeneralDiscoveryQuery",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "generalDiscoveryQuery"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1559224048099",
       "metadata": {},
-      "conditions": "#DiscoveryQuery",
-      "dialog_node": "node_7_1558846831139"
+      "conditions": "anything_else || #DiscoveryQuery",
+      "dialog_node": "node_6_1559224048099"
+    },
+    {
+      "type": "standard",
+      "title": "UnknownRequest",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I am sorry, but I did not understand your request. Please reword your request"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1558837073043",
+      "context": {
+        "chatState": "unknownRequest"
+      },
+      "metadata": {},
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_3_1558837073043"
+      },
+      "conditions": "anything_else",
+      "dialog_node": "node_1_1559584189016",
+      "previous_sibling": "node_2_1558839122145"
     },
     {
       "type": "standard",
@@ -366,6 +519,9 @@
         ]
       },
       "parent": "node_3_1558837073043",
+      "context": {
+        "chatState": "searchForReport"
+      },
       "metadata": {},
       "conditions": "#FindReport",
       "dialog_node": "node_2_1558839122145",
@@ -389,11 +545,33 @@
       },
       "parent": "node_3_1558837073043",
       "context": {
-        "filename": "@filename"
+        "filename": "@filename",
+        "chatState": "specificReport"
       },
       "metadata": {},
       "conditions": "#RecognizeReport",
       "dialog_node": "node_1_1558839086098"
+    },
+    {
+      "type": "standard",
+      "title": "SpecificDiscoveryQuery",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "specificDiscoveryQuery"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1559224021051",
+      "metadata": {},
+      "conditions": "anything_else || #DiscoveryQuery",
+      "dialog_node": "node_3_1559224021051"
     },
     {
       "type": "standard",
@@ -421,19 +599,13 @@
     },
     {
       "type": "standard",
-      "title": "Anything else",
+      "title": "ConversationComplete",
       "output": {
         "generic": [
           {
             "values": [
               {
-                "text": "I didn't understand. Can you try rephrasing."
-              },
-              {
-                "text": "Can you reword your statement? I'm not understanding."
-              },
-              {
-                "text": "I didn't get your meaning."
+                "text": "Sending you back to the homepage..."
               }
             ],
             "response_type": "text",
@@ -442,8 +614,8 @@
         ]
       },
       "metadata": {},
-      "conditions": "anything_else",
-      "dialog_node": "Anything else",
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_1_1559171616819",
       "previous_sibling": "node_1_1558959550846"
     },
     {
@@ -516,7 +688,11 @@
     }
   ],
   "workspace_id": "fe2f8e94-b2d3-4a68-bc19-227a9a3299f2",
-  "counterexamples": [],
+  "counterexamples": [
+    {
+      "text": "travelling eastward"
+    }
+  ],
   "system_settings": {
     "tooling": {
       "store_generic_responses": true
