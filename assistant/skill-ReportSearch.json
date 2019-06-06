@@ -2,11 +2,23 @@
   "name": "ReportSearch",
   "intents": [
     {
-      "intent": "Hello",
+      "intent": "Negatives",
       "examples": [
         {
-          "text": "Welcome"
+          "text": "Nope"
         },
+        {
+          "text": "No"
+        },
+        {
+          "text": "Nadda"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "Hello",
+      "examples": [
         {
           "text": "Hi"
         },
@@ -15,6 +27,9 @@
         },
         {
           "text": "Hey there"
+        },
+        {
+          "text": "Welcome"
         }
       ],
       "description": ""
@@ -53,6 +68,33 @@
       "description": ""
     },
     {
+      "intent": "DoNotSendChatLog",
+      "examples": [
+        {
+          "text": "No, do not send the chat log"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "Affirmatives",
+      "examples": [
+        {
+          "text": "Yes"
+        },
+        {
+          "text": "Yep"
+        },
+        {
+          "text": "Yeah"
+        },
+        {
+          "text": "Affirmative"
+        }
+      ],
+      "description": ""
+    },
+    {
       "intent": "InitiateConversation",
       "examples": [
         {
@@ -60,6 +102,15 @@
         }
       ],
       "description": "Intent fires on session creation. Remote sessions have to receive a message. This gives a response to start user conversation."
+    },
+    {
+      "intent": "SendChatLog",
+      "examples": [
+        {
+          "text": "Yes, send the chat log"
+        }
+      ],
+      "description": ""
     },
     {
       "intent": "AlreadyHaveDocumentId",
@@ -74,22 +125,22 @@
       "intent": "DiscoveryQuery",
       "examples": [
         {
-          "text": "Speed of train"
-        },
-        {
-          "text": "Rail Subdivision"
-        },
-        {
           "text": "Were dangerous goods involved"
-        },
-        {
-          "text": "Rail subdivision mile"
         },
         {
           "text": "Find report on April 3rd 2013"
         },
         {
           "text": "Direction of train travel"
+        },
+        {
+          "text": "Speed of train"
+        },
+        {
+          "text": "Rail Subdivision"
+        },
+        {
+          "text": "Rail subdivision mile"
         }
       ],
       "description": ""
@@ -164,10 +215,10 @@
           "text": "Bye"
         },
         {
-          "text": "Quit"
+          "text": "Exit"
         },
         {
-          "text": "Exit"
+          "text": "Quit"
         },
         {
           "text": "Thank you for your help, return me to the homepage."
@@ -183,6 +234,28 @@
     }
   ],
   "entities": [
+    {
+      "entity": "send",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "send",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "doNotSend",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "doNotSend",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
     {
       "entity": "filename",
       "values": [
@@ -233,7 +306,74 @@
       "parent": "node_2_1558839122145",
       "metadata": {},
       "conditions": "anything_else || #DiscoveryQuery",
-      "dialog_node": "node_3_1558845374153"
+      "dialog_node": "node_3_1558845374153",
+      "previous_sibling": "node_1_1559759584878"
+    },
+    {
+      "type": "standard",
+      "title": "ConversationComplete",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like the chat log of this conversation emailed to you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1558839122145",
+      "metadata": {},
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_1_1559759584878"
+    },
+    {
+      "type": "standard",
+      "title": "DoNotSendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I will not send chat log"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "doNotSend"
+      },
+      "parent": "node_10_1559759729873",
+      "metadata": {},
+      "conditions": "#Negatives || #DoNotSendChatLog",
+      "dialog_node": "node_12_1559759729886",
+      "previous_sibling": "node_11_1559759729886"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "send"
+      },
+      "parent": "node_10_1559759729873",
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_11_1559759729886"
     },
     {
       "type": "event_handler",
@@ -280,6 +420,28 @@
     },
     {
       "type": "standard",
+      "title": "ConversationComplete",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like the chat log of this conversation emailed to you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1558839086098",
+      "metadata": {},
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_4_1559759620203",
+      "previous_sibling": "node_5_1558846039732"
+    },
+    {
+      "type": "standard",
       "title": "ReportFound",
       "output": {
         "generic": [
@@ -298,6 +460,167 @@
       "metadata": {},
       "conditions": "#ReportFound",
       "dialog_node": "node_4_1558846014060"
+    },
+    {
+      "type": "standard",
+      "title": "DoNotSendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I will not send chat log"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "doNotSend"
+      },
+      "parent": "node_7_1559759671612",
+      "metadata": {},
+      "conditions": "#Negatives",
+      "dialog_node": "node_9_1559759671613",
+      "previous_sibling": "node_8_1559759671613"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "send"
+      },
+      "parent": "node_7_1559759671612",
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_8_1559759671613"
+    },
+    {
+      "type": "standard",
+      "title": "DoNotSendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I will not send chat log"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "doNotSend"
+      },
+      "parent": "node_16_1559759800143",
+      "metadata": {},
+      "conditions": "#Negatives",
+      "dialog_node": "node_18_1559759800143",
+      "previous_sibling": "node_17_1559759800143"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "send"
+      },
+      "parent": "node_16_1559759800143",
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_17_1559759800143"
+    },
+    {
+      "type": "standard",
+      "title": "DoNotSendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I will not send chat log"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1559759584878",
+      "context": {
+        "chatLogState": "doNotSend"
+      },
+      "metadata": {},
+      "conditions": "#Negatives",
+      "dialog_node": "node_3_1559759584879",
+      "previous_sibling": "node_2_1559759584879"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1559759584878",
+      "context": {
+        "chatLogState": "send"
+      },
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_2_1559759584879"
+    },
+    {
+      "type": "standard",
+      "title": "ConversationComplete",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like the chat log of this conversation emailed to you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1559224021050",
+      "metadata": {},
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_16_1559759800143",
+      "previous_sibling": "node_4_1559224021051"
     },
     {
       "type": "standard",
@@ -356,25 +679,48 @@
     },
     {
       "type": "standard",
-      "title": "NewSearchForReport",
+      "title": "DoNotSendChatLog",
       "output": {
         "generic": [
           {
             "values": [
               {
-                "text": "I can help with that. Please provide a statement, question or key phrase so I can search for potential reports."
+                "text": "I will not send chat log"
               }
             ],
             "response_type": "text",
             "selection_policy": "sequential"
           }
-        ]
+        ],
+        "chatState": "doNotSend"
       },
-      "parent": "node_1_1556589064338",
+      "parent": "node_13_1559759748926",
       "metadata": {},
-      "conditions": "#FindReport",
-      "dialog_node": "node_5_1559224048099",
-      "previous_sibling": "node_1_1559224021050"
+      "conditions": "#Negatives",
+      "dialog_node": "node_15_1559759748927",
+      "previous_sibling": "node_14_1559759748927"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "send"
+      },
+      "parent": "node_13_1559759748926",
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_14_1559759748927"
     },
     {
       "type": "standard",
@@ -401,6 +747,50 @@
       },
       "conditions": "anything_else || #DiscoveryQuery",
       "dialog_node": "node_8_1558847163260",
+      "previous_sibling": "node_10_1559759729873"
+    },
+    {
+      "type": "standard",
+      "title": "NewSearchForReport",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I can help with that. Please provide a statement, question or key phrase so I can search for potential reports."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1556589064338",
+      "metadata": {},
+      "conditions": "#FindReport || #Negatives",
+      "dialog_node": "node_5_1559224048099",
+      "previous_sibling": "node_1_1559224021050"
+    },
+    {
+      "type": "standard",
+      "title": "ConversationComplete",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like the chat log of this conversation emailed to you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1556589064338",
+      "metadata": {},
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_10_1559759729873",
       "previous_sibling": "node_5_1559224048099"
     },
     {
@@ -449,7 +839,74 @@
       },
       "conditions": "anything_else || #DiscoveryQuery",
       "dialog_node": "node_7_1558846831139",
-      "digress_out": "allow_all"
+      "digress_out": "allow_all",
+      "previous_sibling": "node_7_1559759671612"
+    },
+    {
+      "type": "standard",
+      "title": "ConversationComplete",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like the chat log of this conversation emailed to you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1558846014060",
+      "metadata": {},
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_7_1559759671612"
+    },
+    {
+      "type": "standard",
+      "title": "DoNotSendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I will not send chat log"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "doNotSend"
+      },
+      "parent": "node_19_1559759815109",
+      "metadata": {},
+      "conditions": "#Negatives",
+      "dialog_node": "node_21_1559759815109",
+      "previous_sibling": "node_20_1559759815109"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "send"
+      },
+      "parent": "node_19_1559759815109",
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_20_1559759815109"
     },
     {
       "type": "standard",
@@ -470,17 +927,39 @@
       "parent": "node_5_1559224048099",
       "metadata": {},
       "conditions": "anything_else || #DiscoveryQuery",
-      "dialog_node": "node_6_1559224048099"
+      "dialog_node": "node_6_1559224048099",
+      "previous_sibling": "node_13_1559759748926"
     },
     {
       "type": "standard",
-      "title": "UnknownRequest",
+      "title": "ConversationComplete",
       "output": {
         "generic": [
           {
             "values": [
               {
-                "text": "I am sorry, but I did not understand your request. Please reword your request"
+                "text": "Would you like the chat log of this conversation emailed to you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1559224048099",
+      "metadata": {},
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_13_1559759748926"
+    },
+    {
+      "type": "standard",
+      "title": "ConversationComplete",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like the chat log of this conversation emailed to you?"
               }
             ],
             "response_type": "text",
@@ -489,17 +968,9 @@
         ]
       },
       "parent": "node_3_1558837073043",
-      "context": {
-        "chatState": "unknownRequest"
-      },
       "metadata": {},
-      "next_step": {
-        "behavior": "jump_to",
-        "selector": "body",
-        "dialog_node": "node_3_1558837073043"
-      },
-      "conditions": "anything_else",
-      "dialog_node": "node_1_1559584189016",
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_2_1559759477417",
       "previous_sibling": "node_2_1558839122145"
     },
     {
@@ -519,13 +990,37 @@
         ]
       },
       "parent": "node_3_1558837073043",
-      "context": {
-        "chatState": "searchForReport"
-      },
       "metadata": {},
-      "conditions": "#FindReport",
+      "conditions": "#FindReport || #Negatives",
       "dialog_node": "node_2_1558839122145",
       "previous_sibling": "node_1_1558839086098"
+    },
+    {
+      "type": "standard",
+      "title": "UnknownRequest",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I am sorry, but I did not understand your request. Please reword your request"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1558837073043",
+      "metadata": {},
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_3_1558837073043"
+      },
+      "conditions": "anything_else",
+      "dialog_node": "node_1_1559584189016",
+      "previous_sibling": "node_2_1559759477417"
     },
     {
       "type": "standard",
@@ -545,12 +1040,101 @@
       },
       "parent": "node_3_1558837073043",
       "context": {
-        "filename": "@filename",
-        "chatState": "specificReport"
+        "filename": "@filename"
       },
       "metadata": {},
       "conditions": "#RecognizeReport",
       "dialog_node": "node_1_1558839086098"
+    },
+    {
+      "type": "standard",
+      "title": "DoNotSendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I will not send chat log"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "doNotSend"
+      },
+      "parent": "node_2_1559759477417",
+      "metadata": {},
+      "conditions": "#Negatives",
+      "dialog_node": "node_4_1559759477465",
+      "previous_sibling": "node_3_1559759477464"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "send"
+      },
+      "parent": "node_2_1559759477417",
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_3_1559759477464"
+    },
+    {
+      "type": "standard",
+      "title": "DoNotSendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I will not send chat log"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "doNotSend"
+      },
+      "parent": "node_4_1559759620203",
+      "metadata": {},
+      "conditions": "#Negatives",
+      "dialog_node": "node_6_1559759620239",
+      "previous_sibling": "node_5_1559759620239"
+    },
+    {
+      "type": "standard",
+      "title": "SendChatLog",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "chat log sent"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ],
+        "chatState": "send"
+      },
+      "parent": "node_4_1559759620203",
+      "metadata": {},
+      "conditions": "#SendChatLog || #Affirmatives",
+      "dialog_node": "node_5_1559759620239"
     },
     {
       "type": "standard",
@@ -571,7 +1155,29 @@
       "parent": "node_2_1559224021051",
       "metadata": {},
       "conditions": "anything_else || #DiscoveryQuery",
-      "dialog_node": "node_3_1559224021051"
+      "dialog_node": "node_3_1559224021051",
+      "previous_sibling": "node_19_1559759815109"
+    },
+    {
+      "type": "standard",
+      "title": "ConversationComplete",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like the chat log of this conversation emailed to you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1559224021051",
+      "metadata": {},
+      "conditions": "#ConversationComplete",
+      "dialog_node": "node_19_1559759815109"
     },
     {
       "type": "standard",
@@ -596,27 +1202,6 @@
       "conditions": "#InitiateConversation",
       "dialog_node": "node_3_1558837073043",
       "previous_sibling": "Welcome"
-    },
-    {
-      "type": "standard",
-      "title": "ConversationComplete",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "Sending you back to the homepage..."
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
-      },
-      "metadata": {},
-      "conditions": "#ConversationComplete",
-      "dialog_node": "node_1_1559171616819",
-      "previous_sibling": "node_1_1558959550846"
     },
     {
       "type": "standard",
