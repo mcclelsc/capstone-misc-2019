@@ -1,0 +1,22 @@
+Create an IBM Cloud Account.
+Create an instance of the Watson Discovery Service.
+Create a new collection, upload related reports/documentation to that collection.
+Create an instance of the Watson Assistant Service.
+Import a skill, using skill-ReportSearch.json as the source file.
+Create a new Assistant inside the service, link skill to the new assistant through creation screen.
+
+Upload capstone-middleware-2019 repo to a hosting platform.
+This project used Heroku, which meant only needing to connect the Heroku application to the github repository and then deploying the app.
+Other hosting platforms may require additional setup to create approprite webspace/server instance.
+Update the config.json file with your appropriate api keys, ids and other information.
+Watson Assistant information can be accessed through the service credentials on the Assistant service launch page.
+Assistant id can be found in the assistant that has the attached skill.
+Watson Discovery information API key can be accessed through the service credentials on the Discovery service launch page.
+Collection and Environment ids are found in the created collection hosting the data.
+As of writing this document, these ids can be located by looking to the top right and hitting an 'api' button.
+
+The Android Client application will need its 'middlewareURL' variable updated to match your middleware hosting platform.
+As of June 11th 2019, this String can be found in Conversation.java, GeneralQuery.java and GeneralQueryResult.java
+UploadDocument.java contans a hardcoded string for the 'Admin User' email.
+Future iterations should delegate this value to being set by a json file that can be editted through the 'Admin' Application.
+As of June 11th 2019 this hardcoded String will need to be updated until the above is implemented.
